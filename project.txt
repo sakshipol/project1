@@ -5429,6 +5429,162 @@ name                             sdo_geom.sdo_area(c.shape_151,0.005)
 science_building                                                   10
 
 
+1. Create (Insert) Documents
+Use the insertOne method to create a document.
+
+javascript
+Copy code
+db.myCollection.insertOne({
+  "name": "Alice",
+  "age": 23,
+  "location": "Mumbai"
+});
+{
+  acknowledged: true,
+  insertedId: ObjectId('67447330becd64f21781fbdd')
+}
+2. Update Documents
+Update a Single Document: Use the updateOne method to update a specific document.
+
+javascript
+Copy code
+db.myCollection.updateOne(
+  { "name": "Alice" }, // Filter
+  { $set: { "age": 25 } } // Update
+);
+{
+  acknowledged: true,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Update Multiple Documents: Use the updateMany method to update multiple matching documents.
+
+javascript
+Copy code
+db.myCollection.updateMany(
+  { "age": { $lt: 25 } }, // Filter
+  { $set: { "location": "Pune" } } // Update
+);
+{
+  acknowledged: true,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+3. Delete Documents
+Delete a Single Document: Use the deleteOne method to remove a specific document.
+
+javascript
+Copy code
+db.myCollection.deleteOne(
+  { "name": "Alice" } // Filter
+);
+{
+  acknowledged: true,
+  deletedCount: 1
+}
+Delete Multiple Documents: Use the deleteMany method to remove multiple documents.
+
+javascript
+Copy code
+db.myCollection.deleteMany(
+  { "age": { $gt: 30 } } // Filter
+);
+{
+  acknowledged: true,
+  deletedCount: 3
+}
+4. Aggregation
+Use the aggregate method to perform aggregation operations.
+
+Group by location and count the number of users:
+
+javascript
+Copy code
+db.myCollection.aggregate([
+  { $group: { _id: "$location", count: { $sum: 1 } } }
+]);
+{
+  _id: "Mumbai",
+  count: 5
+}
+{
+  _id: "Pune",
+  count: 3
+}
+Filter and Group (e.g., users older than 20):
+
+javascript
+Copy code
+db.myCollection.aggregate([
+  { $match: { "age": { $gt: 20 } } }, // Filter
+  { $group: { _id: "$location", count: { $sum: 1 } } } // Group
+]);
+{
+  _id: "Mumbai",
+  count: 4
+}
+{
+  _id: "Pune",
+  count: 2
+}
+5. Less Than ($lt) and Greater Than ($gt) Filters
+Find Documents with Age Less Than 25:
+
+javascript
+Copy code
+db.myCollection.find(
+  { "age": { $lt: 25 } }
+);
+{
+  _id: ObjectId('67447330becd64f21781fbdd'),
+  name: "Bob",
+  age: 22,
+  location: "Kalyan"
+}
+{
+  _id: ObjectId('6744736ebecd64f21781fbde'),
+  name: "Charlie",
+  age: 20,
+  location: "Mumbai"
+}
+Find Documents with Age Greater Than 30:
+
+javascript
+Copy code
+db.myCollection.find(
+  { "age": { $gt: 30 } }
+);
+{
+  _id: ObjectId('67447384becd64f21781fbdf'),
+  name: "Eve",
+  age: 32,
+  location: "Dombivili"
+}
+6. Combining Conditions (e.g., Age Between 20 and 30)
+javascript
+Copy code
+db.myCollection.find(
+  { "age": { $gt: 20, $lt: 30 } }
+);
+{
+  _id: ObjectId('67447330becd64f21781fbdd'),
+  name: "Bob",
+  age: 22,
+  location: "Kalyan"
+}
+{
+  _id: ObjectId('6744736ebecd64f21781fbde'),
+  name: "Charlie",
+  age: 25,
+  location: "Pune"
+}
+db.myCollection.insertMany([
+  { "name": "John", "age": 25, "location": "Mumbai" },
+  { "name": "Jane", "age": 28, "location": "Delhi" },
+  { "name": "Smith", "age": 30, "location": "Chennai" }
+]);
 
 
 
@@ -5450,10 +5606,3 @@ science_building                                                   10
 
 
 
-
-
-Bibliography:
-
-1.	Fundamentals of Database Management System – Elmarsi, Navathe.
-2.	Database Management Systems – RaghuRamkrishnan, Ghreke.
-3.	Advance Database Management System – Korth.
